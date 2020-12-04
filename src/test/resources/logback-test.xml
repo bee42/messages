@@ -1,0 +1,27 @@
+<configuration scan="true" scanPeriod="30 seconds" >
+    <contextName>MESSAGE</contextName>
+    <jmxConfigurator />
+    <define name="X-PID" class="com.bee42.messages.logback.PidDefiner" scope="system" />
+    <define name="X-System" class="com.bee42.messages.logback.LoggerContextNameDefiner" scope="context">
+         <!--<path>versionInfo.properties</path>    -->
+    </define>
+
+    <appender name="LOGGER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>%property{X-System}[%property{X-PID}];%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ};1.2;%mdc{hostname:--};%thread;%mdc{system:--};%mdc{correlationID:--};%mdc{requestID:--};%-5level;%logger{1};[%msg]%n%xEx</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="JSON-LOGGER" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>{ "date": "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}", "version": "1.2", "address": "%mdc{hostname:--}", "pid": "%property{X-PID}", "thread": "%thread", "system": "%property{X-System}", "correlationID": "%mdc{correlationID:--}", "requestID": "%mdc{requestID:--}", "level": "%-5level", "logger": "%logger{1}", "message": "%msg", "stacktrace": "%xEx"}%n</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="LOGGER" />
+        <appender-ref ref="JSON-LOGGER" />
+    </root>
+
+</configuration>
